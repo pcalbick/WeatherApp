@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+
+    <string name="save_location">Save Location</string>
+    <string name="places">My Places</string>
+
+    <string name="my_location">My Location</string>
+    <string name="share">Share</string>
+    <string name="loading_text">Loading</string>
+
+    <string name="enter_text">Enter</string>
+
+    <string name="null_placeholder">Null</string>
+
+    <!-- Labels for items -->
+    <string name="temp_high_string">High:</string>
+    <string name="temp_low_string">Low:</string>
+    <string name="sky_picture_description">Sky Status Picture</string>
+
+    <!-- Preference File Key -->
+    <string name="preference_file_key">com.pac.weatherrebuild.PREFERENCE_FILE_KEY</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:graph="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/day_items"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <!-- Linear Layout - Bold Day First - Not Bold Date Next -->
+    <TextView
+        android:id="@+id/day"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_weight="0.20"
+        android:padding="4dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/sky"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_weight="0.25"
+        android:padding="4dp" />
+    <com.pac.weatherrebuild.ui.forecastgraph.TemperatureGraph
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.55"
+        graph:barHeight="40"
+        graph:barPadding="0dp"
+        graph:textColor="@color/colorAccent"
+        graph:textHeight="40"/>
+
+</LinearLayout>
