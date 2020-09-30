@@ -1,3 +1,9 @@
+/*TODO
+*
+*   Replace using SharedPreferences with Room service
+*
+ */
+
 package com.pac.weatherrebuild.storage;
 
 import android.content.SharedPreferences;
@@ -40,7 +46,7 @@ public class Data {
         editor.putInt(tempHi, forecast.getHighTemperature());
         editor.putInt(tempLo, forecast.getLowTemperature());
         editor.putInt(cloudCover, forecast.getCloudCover().get(0));
-        editor.putInt(precipitation, forecast.getPrecipitation().get(0));
+        editor.putInt(precipitation, forecast.getPrecipitation());
 
         editor.putInt(listSize, forecast.getDays().size());
         editor.putInt(maxTemp, forecast.getMaxTemperature());
@@ -70,8 +76,7 @@ public class Data {
 
         List<Integer> cloud = new ArrayList<>();
         cloud.add(sharedPref.getInt(cloudCover,0));
-        List<Integer> precip = new ArrayList<>();
-        precip.add(sharedPref.getInt(precipitation,0));
+        int precip = sharedPref.getInt(precipitation, 0);
 
         forecast.setCloudCover(cloud);
         forecast.setPrecipitation(precip);
@@ -99,5 +104,11 @@ public class Data {
         forecast.setSkies(skies);
 
         return forecast;
+    }
+
+    public void clear(){
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.apply();
     }
 }

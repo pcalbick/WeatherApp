@@ -115,26 +115,27 @@ public class NetworkClient {
 
     private Forecast displayPrecipitation(Weather weather, Forecast forecast){
         //sometimes weather status info is missing from api // might be about to switch to seven day forecast if null
-        WeatherStatus status = weather.getWeatherStatus(weather.getWeatherStatusKey(),0);
+        /*WeatherStatus status = weather.getWeatherStatus(weather.getWeatherStatusKey(),0);
         if(status == null){
             Log.d(TAG, "displayTempGraph: Skipping Weather Status Forecast Parsing");
             return forecast;
-        }
+        }*/
 
-        if(status.isStatus()) {
+        //if(status.isStatus()) {
             Values precip = weather.getValue("12 Hourly Probability of Precipitation", null);
 
             List<Integer> precipitation = new ArrayList<>();
+            int precipAverage = 0;
             for (int i = 0; i < precip.getValues().size(); i++) {
                 precipitation.add(precip.getValue(i));
+                precipAverage += precip.getValue(i);
             }
 
-            forecast.setPrecipitation(precipitation);
-            if(status.getWeatherType() == null) forecast.setPrecipitationSummary("SUNNY");
-            else forecast.setPrecipitationSummary(status.getWeatherType().toUpperCase());
+            forecast.setPrecipitationList(precipitation);
+            forecast.setPrecipitation(precipAverage/precip.getValues().size());
 
             Log.d(TAG, "displayPrecipitation: SET");
-        }
+        //}
 
         return forecast;
     }

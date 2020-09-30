@@ -6,7 +6,8 @@ import java.util.List;
 public class Forecast {
 
     private List<Integer> cloudCover = new ArrayList<>();
-    private List<Integer> precipitation = new ArrayList<>();
+    private List<Integer> precipitationList = new ArrayList<>();
+    private int precipitation;
     private int temperature;
     private int highTemperature;
     private int lowTemperature;
@@ -34,7 +35,11 @@ public class Forecast {
         this.lowTime = lowTime;
     }
 
-    public void setPrecipitation(List<Integer> precipitation) {
+    public void setPrecipitationList(List<Integer> precipitationList) {
+        this.precipitationList = precipitationList;
+    }
+
+    public void setPrecipitation(int precipitation){
         this.precipitation = precipitation;
     }
 
@@ -66,7 +71,11 @@ public class Forecast {
         return lowTime;
     }
 
-    public List<Integer> getPrecipitation() {
+    public List<Integer> getPrecipitationList() {
+        return precipitationList;
+    }
+
+    public int getPrecipitation(){
         return precipitation;
     }
 

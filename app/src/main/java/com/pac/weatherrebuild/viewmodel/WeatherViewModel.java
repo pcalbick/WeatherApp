@@ -35,7 +35,8 @@ public class WeatherViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> lowTemp = new MutableLiveData<>();
     private MutableLiveData<String> highTime = new MutableLiveData<>();
     private MutableLiveData<String> lowTime = new MutableLiveData<>();
-    private MutableLiveData<List<Integer>> precipitation = new MutableLiveData<>();
+    private MutableLiveData<List<Integer>> precipitationList = new MutableLiveData<>();
+    private MutableLiveData<Integer> precipitation = new MutableLiveData<>();
     private MutableLiveData<String> skySummary = new MutableLiveData<>();
     private MutableLiveData<List<Integer>> cloudCover = new MutableLiveData<>();
 
@@ -86,8 +87,12 @@ public class WeatherViewModel extends AndroidViewModel {
         lowTime.setValue(time);
     }
 
-    public void setPrecipitation(List<Integer> precip){
-        precipitation.setValue(precip);
+    public void setPrecipitationList(List<Integer> precip){
+        precipitationList.setValue(precip);
+    }
+
+    public void setPrecipitation(Integer precipitation){
+        this.precipitation.setValue(precipitation);
     }
 
     public void setSkySummary(String precipSum){
@@ -133,7 +138,11 @@ public class WeatherViewModel extends AndroidViewModel {
         return lowTime;
     }
 
-    public LiveData<List<Integer>> getPrecipitation(){
+    public LiveData<List<Integer>> getPrecipitationList(){
+        return precipitationList;
+    }
+
+    public LiveData<Integer> getPrecipitation(){
         return precipitation;
     }
 

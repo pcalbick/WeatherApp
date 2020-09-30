@@ -116,6 +116,9 @@ public class WeatherFragment extends Fragment {
         Calendar currentDate = GregorianCalendar.getInstance();
         Date requestTime = currentDate.getTime();
 
+        //For testing
+        //sharedData.clear();
+
         if(!sharedPref.getAll().isEmpty()) {
             Date savedDate = parseSavedDate(Objects.requireNonNull(sharedPref.getString(Data.REQUEST_TIME, "")));
             Log.d(TAG, "checkSharedPreferences: Time to update: " + (hour - (requestTime.getTime() - savedDate.getTime())) + "ms");
@@ -175,11 +178,11 @@ public class WeatherFragment extends Fragment {
         });
 
         //Precipitation Observers
-        mViewModel.getPrecipitation().observe(owner, new Observer<List<Integer>>() {
+        mViewModel.getPrecipitation().observe(owner, new Observer<Integer>() {
             @Override
-            public void onChanged(@Nullable final List<Integer> i) {
+            public void onChanged(@Nullable final Integer i) {
                 if(i != null) {
-                    precipitationChance.setText(String.format(Locale.US,"%d%%", i.get(0)));
+                    precipitationChance.setText(String.format(Locale.US,"%d%%", i));
                 } else {
                     precipitationChance.setText(R.string.null_placeholder);
                 }
