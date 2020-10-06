@@ -50,6 +50,8 @@ public class WeatherViewModel extends AndroidViewModel {
     private List<ForecastDataSet> forecastChartData = new ArrayList<>();
     private MutableLiveData<List<WeatherViewModel.ForecastDataSet>> forecastDataSets = new MutableLiveData<>();
 
+    private MutableLiveData<Integer> loading = new MutableLiveData<>();
+
     // MediatorLiveData can observe other LiveData objects and react on their emissions.
     //private final MediatorLiveData<LocationEntity> mObservableLocation;
 
@@ -117,6 +119,8 @@ public class WeatherViewModel extends AndroidViewModel {
 
     public void setWeekSkies(List<String> arr) { weekSkies.setValue(arr); }
 
+    public void setLoading(Integer visibility) { loading.setValue(visibility); }
+
     //Getters
     public LiveData<Integer> getTemperature(){
         return temperature;
@@ -166,6 +170,10 @@ public class WeatherViewModel extends AndroidViewModel {
     public LiveData<List<String>> getWeekDays() { return weekDays; }
 
     public LiveData<List<String>> getWeekSkies() { return weekSkies; }
+
+    public LiveData<Integer> getLoading() {
+        return loading;
+    }
 
     //7Day Forecast
     public void setForecastChart(int index, String day, String sky, int[] graph, int[] bounds) {

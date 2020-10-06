@@ -2,6 +2,7 @@ package com.pac.weatherrebuild;
 
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -69,6 +70,8 @@ public class Repository implements NetworkInterface {
     //Network calls
     public void getCurrentWeather(final double lat, final double lng,
                                   Date requestTime, Data sharedData){
+        model.setLoading(View.VISIBLE);
+
         this.sharedData = sharedData;
 
         FormatDate formatDate = new FormatDate();
@@ -159,6 +162,8 @@ public class Repository implements NetworkInterface {
                     new int[] {forecast.getMaxArray().get(i),forecast.getMinArray().get(i)},
                     new int[] {forecast.getMinTemperature(),forecast.getMaxTemperature()});
         }
+
+        model.setLoading(View.GONE);
     }
 
     private String getDayOfWeek(String date, FormatDate format){

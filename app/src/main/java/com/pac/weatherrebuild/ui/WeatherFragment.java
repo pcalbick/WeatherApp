@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -47,6 +48,8 @@ public class WeatherFragment extends Fragment {
     private TextView temperature;
     private TextView highTemp;
     private TextView lowTemp;
+    private TextView highTempLabel;
+    private TextView lowTempLabel;
 
     private TextView skyStatus;
     private Image skyPic;
@@ -56,6 +59,8 @@ public class WeatherFragment extends Fragment {
     public RecyclerView recyclerView;
     public RecyclerView.Adapter<?> mAdapter;
     public List<WeatherViewModel.ForecastDataSet> data = new ArrayList<>();
+
+    public ConstraintLayout loading;
 
     public static WeatherFragment newInstance() {
         return new WeatherFragment();
@@ -80,6 +85,9 @@ public class WeatherFragment extends Fragment {
         highTemp = this.getView().findViewById(R.id.temp_hi);
         lowTemp = this.getView().findViewById(R.id.temp_lo);
 
+        highTempLabel = this.getView().findViewById(R.id.temp_hi_text);
+        lowTempLabel = this.getView().findViewById(R.id.temp_low_text);
+
         skyStatus = this.getView().findViewById(R.id.sky_status);
         //skyPic = this.getView().findViewById(R.id.sky_picture);
         precipitationChance = this.getView().findViewById(R.id.precipitation_chance);
@@ -96,6 +104,9 @@ public class WeatherFragment extends Fragment {
         mAdapter = new ForecastAdapter(data);
         recyclerView.setAdapter(mAdapter);
 
+        //Loading Overlay
+        loading = this.getView().findViewById(R.id.loading);
+
         setObservers();
     }
 
@@ -108,6 +119,7 @@ public class WeatherFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Context context = getActivity();
+
         assert context != null;
         SharedPreferences sharedPref = context.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -117,17 +129,16 @@ public class WeatherFragment extends Fragment {
         Date requestTime = currentDate.getTime();
 
         //For testing
-        //sharedData.clear();
+        sharedData.clear();
 
         if(!sharedPref.getAll().isEmpty()) {
+            lowTempLabel.setVisibility(View.VISIBLE);
+            highTempLabel.setVisibility(View.VISIBLE);
+            repository.updateForecastUI(sharedData.readForecast());
             Date savedDate = parseSavedDate(Objects.requireNonNull(sharedPref.getString(Data.REQUEST_TIME, "")));
             Log.d(TAG, "checkSharedPreferences: Time to update: " + (hour - (requestTime.getTime() - savedDate.getTime())) + "ms");
-            if(requestTime.getTime() - savedDate.getTime() > hour) {
+            if(requestTime.getTime() - savedDate.getTime() > hour)
                 setWeather(sharedPref,requestTime,sharedData);
-            } else {
-                Log.d(TAG, "checkSharedPreferences: UI Updated From Stored Data");
-                repository.updateForecastUI(sharedData.readForecast());
-            }
         } else {
             setWeather(sharedPref,requestTime,sharedData);
         }
@@ -160,6 +171,7 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final Integer i) {
                 if(i != null) {
+                    lowTempLabel.setVisibility(View.VISIBLE);
                     lowTemp.setText(String.format(Locale.US,"%d", i));
                 } else {
                     lowTemp.setText(R.string.null_placeholder);
@@ -170,6 +182,7 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final Integer i) {
                 if(i != null) {
+                    highTempLabel.setVisibility(View.VISIBLE);
                     highTemp.setText(String.format(Locale.US,"%d", i));
                 } else {
                     highTemp.setText(R.string.null_placeholder);
@@ -224,6 +237,13 @@ public class WeatherFragment extends Fragment {
                         mAdapter.notifyItemChanged(i);
                     }
                 }
+            }
+        });
+
+        mViewModel.getLoading().observe(owner, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                loading.setVisibility(integer);
             }
         });
     }
