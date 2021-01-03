@@ -14,8 +14,11 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(tableName =  "weather_table")
 public class WeatherEntity {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
+    public int uid;
+
+    @ColumnInfo(name = "place_name")
     private String placeName;
 
     @ColumnInfo(name = "lat")
@@ -44,7 +47,7 @@ public class WeatherEntity {
     @ColumnInfo(name = "forecast_low_temp")
     private int lowTemperature;
 
-    @ColumnInfo(name = "forcast_high_time")
+    @ColumnInfo(name = "forecast_high_time")
     private String highTime;
 
     @ColumnInfo(name = "forecast_low_time")

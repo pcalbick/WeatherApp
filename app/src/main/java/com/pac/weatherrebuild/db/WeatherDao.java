@@ -12,7 +12,7 @@ import androidx.room.Update;
 @Dao
 public interface WeatherDao {
 
-    @Query("SELECT * FROM weather_table WHERE placeName like :place LIMIT 1")
+    @Query("SELECT * FROM weather_table WHERE place_name like :place LIMIT 1")
     LiveData<WeatherEntity> findWeatherByName(String place);
 
     @Query("SELECT * FROM weather_table WHERE lat like :lat AND lng like :lng LIMIT 1")
