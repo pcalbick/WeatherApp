@@ -16,14 +16,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.pac.weatherrebuild.BaseApp;
 import com.pac.weatherrebuild.R;
-import com.pac.weatherrebuild.Repository;
-import com.pac.weatherrebuild.model.Forecast;
 import com.pac.weatherrebuild.storage.Data;
 import com.pac.weatherrebuild.ui.forecastgraph.ForecastAdapter;
 import com.pac.weatherrebuild.viewmodel.WeatherViewModel;
@@ -43,7 +40,6 @@ public class WeatherFragment extends Fragment {
     private final long hour = 3600000;
 
     private WeatherViewModel mViewModel;
-    private Repository repository;
 
     private TextView temperature;
     private TextView highTemp;
@@ -93,8 +89,8 @@ public class WeatherFragment extends Fragment {
         precipitationChance = this.getView().findViewById(R.id.precipitation_chance);
         cloudCover = this.getView().findViewById(R.id.cloud_cover);
 
-        repository = ((BaseApp)getActivity().getApplication()).getRepository();
-        mViewModel = repository.getViewModel();
+        //Get ViewModel
+        mViewModel = new ViewModelProvider(requireActivity()).get(WeatherViewModel.class);
 
         //Forecast Weather Chart
         recyclerView = view.findViewById(R.id.day_container);
@@ -134,7 +130,7 @@ public class WeatherFragment extends Fragment {
         if(!sharedPref.getAll().isEmpty()) {
             lowTempLabel.setVisibility(View.VISIBLE);
             highTempLabel.setVisibility(View.VISIBLE);
-            repository.updateForecastUI(sharedData.readForecast());
+            mViewModel.updateForecastUI(sharedData.readForecast());
             Date savedDate = parseSavedDate(Objects.requireNonNull(sharedPref.getString(Data.REQUEST_TIME, "")));
             Log.d(TAG, "checkSharedPreferences: Time to update: " + (hour - (requestTime.getTime() - savedDate.getTime())) + "ms");
             if(requestTime.getTime() - savedDate.getTime() > hour)
@@ -150,7 +146,7 @@ public class WeatherFragment extends Fragment {
         editor.apply();
 
         //Hard Coded for tests
-        repository.getCurrentWeather(38.99, -77.01, requestTime,sharedData);
+        mViewModel.getCurrentWeather(38.99, -77.01, requestTime,sharedData);
     }
 
     private void setObservers(){

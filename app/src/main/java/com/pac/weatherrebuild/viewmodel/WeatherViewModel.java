@@ -1,26 +1,30 @@
 package com.pac.weatherrebuild.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
 
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 //import com.pac.weatherapp.BaseApp;
+import com.pac.weatherrebuild.AppExecutors;
+import com.pac.weatherrebuild.BaseApp;
 import com.pac.weatherrebuild.Repository;
+import com.pac.weatherrebuild.db.WeatherEntity;
+import com.pac.weatherrebuild.model.Forecast;
+import com.pac.weatherrebuild.storage.Data;
 //import com.pac.weatherapp.db.entity.LocationEntity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class WeatherViewModel extends AndroidViewModel {
 
     private static final String TAG = "WeatherViewModel";
 
-    //private final Repository mRepository;
+    private Repository mRepository;
+    private LiveData<WeatherEntity> mWeatherEntity;
 
     //TEMP GRAPH
     /*weatherEntity.setLowestTemperature(minValue);
@@ -57,6 +61,9 @@ public class WeatherViewModel extends AndroidViewModel {
 
     public WeatherViewModel(Application application) {
         super(application);
+        BaseApp app = (BaseApp) getApplication();
+        mRepository = app.getRepository();
+        mRepository.model = this;
         /*mObservableLocation = new MediatorLiveData<>();
         // set by default null, until we get data from the database.
         mObservableLocation.setValue(null);
@@ -66,6 +73,23 @@ public class WeatherViewModel extends AndroidViewModel {
 
         // observe the changes of the products from the database and forward them
         mObservableLocation.addSource(location, mObservableLocation::setValue);*/
+    }
+
+    public LiveData<WeatherEntity> getFullWeather(int lat, int lng){
+        return mRepository.getWeatherFromDatabase(lat,lng);
+    }
+
+    public LiveData<WeatherEntity> getFullWeather(String place){
+        return mRepository.getWeatherFromDatabase(place);
+    }
+
+    public void getCurrentWeather(final double lat, final double lng,
+                                  Date requestTime, Data sharedData) {
+        mRepository.getCurrentWeather(lat,lng,requestTime,sharedData);
+    }
+
+    public void updateForecastUI(Forecast forecast){
+        mRepository.updateForecastUI(forecast);
     }
 
     //Setters

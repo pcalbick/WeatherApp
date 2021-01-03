@@ -1,12 +1,15 @@
 package com.pac.weatherrebuild;
 
+import android.app.Application;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 
-import com.pac.weatherrebuild.model.DayForecast;
+import com.pac.weatherrebuild.db.WeatherDao;
+import com.pac.weatherrebuild.db.WeatherDatabase;
+import com.pac.weatherrebuild.db.WeatherEntity;
 import com.pac.weatherrebuild.model.Forecast;
 import com.pac.weatherrebuild.network.NetworkClient;
 import com.pac.weatherrebuild.network.NetworkInterface;
@@ -17,55 +20,76 @@ import com.pac.weatherrebuild.viewmodel.WeatherViewModel;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.concurrent.Callable;
 
 public class Repository implements NetworkInterface {
 
     private static final String TAG = "Repository";
 
-    private static Repository sInstance;
+    private final WeatherDao mWeatherDao;
+    private LiveData<WeatherEntity> mFullWeather;
+
+    //private static Repository sInstance;
     private Data sharedData;
     private AppExecutors mExecutors;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
 
     public WeatherViewModel model;
 
-    public Repository(AppExecutors executors){
+    //Set up database and executors
+    public Repository(Application application){
+        WeatherDatabase db = WeatherDatabase.getDatabase(application);
+        mWeatherDao = db.weatherDao();
+    }
+
+    public void setExecutors(AppExecutors executors){
         mExecutors = executors;
     }
 
-    public static Repository getInstance(AppExecutors executors){
+    /*public static Repository getInstance(Application application){
         if(sInstance == null){
             synchronized (Repository.class){
                 if(sInstance == null){
-                    sInstance = new Repository(executors);
+                    sInstance = new Repository(application);
                 }
             }
         }
         return sInstance;
-    }
-
-    public void setViewModel(WeatherViewModel model){
-        this.model = model;
-    }
-
-    public WeatherViewModel getViewModel() { return model; }
-
-    //public LiveData<List<LocationEntity>> getLocations(){
-    //    return mObservableLocations;
-    //}
-
-    //public LiveData<LocationEntity> getLocation(final int locationId){
-    //    return mDatabase.locationDao().loadLocation(locationId);
-    //}
-
-    //public LiveData<LocationEntity> searchLocation(final String locationName){
-    //    return mDatabase.locationDao().loadLocationFromName(locationName);
-    //}
-
-    /*public void deleteLocation(final int locationId){
-        mDatabase.locationDao().deleteLocation(locationId);
     }*/
+
+    //Get weather from database
+    public LiveData<WeatherEntity> getWeatherFromDatabase(int lat, int lng){
+        final int latitude = lat;
+        final int longitude = lng;
+        Callable<LiveData<WeatherEntity>> getWeather = new Callable<LiveData<WeatherEntity>>() {
+            @Override
+            public LiveData<WeatherEntity> call() throws Exception {
+                return mWeatherDao.findWeather(latitude,longitude);
+            }
+        };
+        try {
+            return getWeather.call();
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public LiveData<WeatherEntity> getWeatherFromDatabase(String place){
+        final String p = place;
+        Callable<LiveData<WeatherEntity>> getWeather = new Callable<LiveData<WeatherEntity>>() {
+            @Override
+            public LiveData<WeatherEntity> call() throws Exception {
+                return mWeatherDao.findWeatherByName(p);
+            }
+        };
+        try {
+            return getWeather.call();
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     //Network calls
     public void getCurrentWeather(final double lat, final double lng,
@@ -109,7 +133,6 @@ public class Repository implements NetworkInterface {
         Log.d(TAG, "downloadFromApi: " + forecastUrl);
 
         final NetworkClient networkClient = new NetworkClient();
-
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {

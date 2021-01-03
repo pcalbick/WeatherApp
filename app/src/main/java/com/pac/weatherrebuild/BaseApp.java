@@ -18,6 +18,8 @@ public class BaseApp extends Application {
     //public AppDatabase getDatabase(){ return AppDatabase.getInstance(this,getAppExecutors()); }
 
     public Repository getRepository(){
-        return Repository.getInstance(getAppExecutors());
+        Repository repository = new Repository(this);
+        repository.setExecutors(getAppExecutors());
+        return repository;
     }
 }

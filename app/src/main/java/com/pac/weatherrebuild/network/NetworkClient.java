@@ -179,11 +179,15 @@ public class NetworkClient {
     private InputStream downloadUrl(String urlString) throws Exception {
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.setRequestProperty("User-Agent:","calbick.peter@student.ccm.edu");
+
         conn.setReadTimeout(10000);
         conn.setConnectTimeout(20000);
         conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        conn.connect();
+        int responseCode = conn.getResponseCode();
+        if(responseCode >= 400 && responseCode <= 499)
+            throw new Exception("Bad Authentication Status " + responseCode);
         return conn.getInputStream();
     }
 }

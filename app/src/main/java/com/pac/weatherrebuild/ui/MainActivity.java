@@ -53,10 +53,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
 
-        WeatherViewModel mViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
-
-        Repository repository = ((BaseApp)getApplication()).getRepository();
-        repository.setViewModel(mViewModel);
+        //WeatherViewModel mViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         WeatherFragment fragment = WeatherFragment.newInstance();
