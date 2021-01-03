@@ -151,7 +151,7 @@ public class Repository implements NetworkInterface {
     private final Runnable forecastRunnable = new Runnable() {
         @Override
         public void run() {
-            //sharedData.writeForecast(forecast);
+            sharedData.writeForecast(forecast);
             updateForecastUI(forecast);
         }
     };
