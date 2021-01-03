@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
-    public static final String REQUEST_TIME = "requestTime";
+    /*public static final String REQUEST_TIME = "requestTime";
 
     private final String temp = "temp";
     private final String tempHi = "tempHi";
@@ -110,5 +110,5 @@ public class Data {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();
         editor.apply();
-    }
+    }*/
 }
